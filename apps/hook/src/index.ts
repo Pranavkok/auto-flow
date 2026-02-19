@@ -1,5 +1,5 @@
-import express from "express" ;
-import {prisma} from "@repo/db/client"
+import express from "express";
+import { prisma } from "@repo/db/client"
 
 const app = express();
 app.use(express.json())
@@ -30,6 +30,6 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     })
 })
 
-app.listen(3001,()=>{
+app.listen(3002, () => {
     console.log("Serving smoothly")
 })
