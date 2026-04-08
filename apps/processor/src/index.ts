@@ -1,11 +1,16 @@
+import "dotenv/config";
 import {prisma} from "@repo/db/client"
 import {Kafka} from "kafkajs";
 
 const TOPIC_NAME = "zap-events"
+const KAFKA_BROKERS = (process.env.KAFKA_BROKERS || "localhost:9092")
+    .split(",")
+    .map((broker) => broker.trim())
+    .filter(Boolean);
 
 const kafka = new Kafka({
     clientId: 'outbox-processor',
-    brokers: ['localhost:9092']
+    brokers: KAFKA_BROKERS
 })
 
 async function runScheduledZaps() {

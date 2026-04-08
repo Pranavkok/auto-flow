@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Plus, Zap, ArrowDown, X, Loader2, ChevronDown, Check, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
 
 interface AppOption {
     id: string;

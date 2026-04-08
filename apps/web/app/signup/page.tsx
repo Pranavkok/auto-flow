@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Zap, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
 
 const perks = [
     { text: "Free forever for personal use", emoji: "🎁" },

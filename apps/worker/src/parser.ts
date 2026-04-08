@@ -14,14 +14,18 @@ export function parse(text: string, values: any, startDelimeter = "{", endDelime
             // 
             let stringHoldingValue = text.slice(startIndex + 1, endPoint);
             const keys = stringHoldingValue.split(".");
-            let localValues = {
+            let localValues: any = {
                 ...values
             }
             for (let i = 0; i < keys.length; i++) {
                 if (typeof localValues === "string") {
                     localValues = JSON.parse(localValues);
                 }
-                localValues = localValues[keys[i]];
+                const key = keys[i];
+                if (key === undefined) {
+                    break;
+                }
+                localValues = localValues[key];
             }
             finalString += localValues;
             startIndex = endPoint + 1;

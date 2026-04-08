@@ -7,8 +7,8 @@ import { Navbar } from "@/components/Navbar";
 import { Plus, Zap, Calendar, Link2, ExternalLink, Loader2, AlertCircle, RefreshCw, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
-const BACKEND_URL = "http://localhost:3000";
-const HOOKS_URL = "http://localhost:3002";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+const HOOKS_URL = process.env.NEXT_PUBLIC_HOOKS_URL || "http://localhost:3002";
 
 interface ZapAction {
     type?: { name: string };

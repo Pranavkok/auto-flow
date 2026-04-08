@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware.js";
 import { SigninSchema, SignupSchema } from "../types/index.js";
 import {prisma} from "@repo/db/client"
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const JWT_PASSWORD = process.env.JWT_PASSWORD as string || "secret";
@@ -32,17 +33,20 @@ router.post("/signup", async (req, res) => {
             })
         }
 
-        await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 email: parsedData.data.username,
-                // TODO: Dont store passwords in plaintext, hash it
-                password: parsedData.data.password,
+                password: await bcrypt.hash(parsedData.data.password, 10),
                 name: parsedData.data.name
             }
-        })
+        });
+
+        const token = jwt.sign({
+            id: user.id
+        }, JWT_PASSWORD);
 
         return res.json({
-            message: "Please verify your account by checking your email"
+            token
         });
     } catch (e) {
         console.error(e);
@@ -64,11 +68,10 @@ router.post("/signin", async (req, res) => {
     const user = await prisma.user.findFirst({
         where: {
             email: parsedData.data.username,
-            password: parsedData.data.password
         }
     });
     
-    if (!user) {
+    if (!user || !(await bcrypt.compare(parsedData.data.password, user.password))) {
         return res.status(403).json({
             message: "Sorry credentials are incorrect"
         })

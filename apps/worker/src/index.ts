@@ -1,17 +1,22 @@
+import "dotenv/config";
 import { prisma as prismaClient } from "@repo/db";
 import { Kafka } from "kafkajs";
-import { parse } from "./parser";
-import { sendEmail } from "./email";
-import { sendSol } from "./solana";
-import { sendSlackMessage } from "./slack";
-import { sendDiscordMessage } from "./discord";
-import { makeHttpRequest } from "./httpRequest";
+import { parse } from "./parser.js";
+import { sendEmail } from "./email.js";
+import { sendSol } from "./solana.js";
+import { sendSlackMessage } from "./slack.js";
+import { sendDiscordMessage } from "./discord.js";
+import { makeHttpRequest } from "./httpRequest.js";
 
 const TOPIC_NAME = "zap-events"
+const KAFKA_BROKERS = (process.env.KAFKA_BROKERS || "localhost:9092")
+    .split(",")
+    .map((broker) => broker.trim())
+    .filter(Boolean);
 
 const kafka = new Kafka({
     clientId: 'outbox-processor-2',
-    brokers: ['localhost:9092']
+    brokers: KAFKA_BROKERS
 })
 
 async function main() {
@@ -63,16 +68,20 @@ async function main() {
 
             const zapRunMetadata = zapRunDetails?.metadata;
 
-            if (currentAction.type.id === "email") {
+            if (currentAction.type.id === "mail-action") {
                 const body = parse((currentAction.metadata as Record<string, unknown>)?.body as string, zapRunMetadata);
-                const to = parse((currentAction.metadata as Record<string, unknown>)?.email as string, zapRunMetadata);
+                const to = parse((currentAction.metadata as Record<string, unknown>)?.to as string, zapRunMetadata);
+                const subject = parse(
+                    ((currentAction.metadata as Record<string, unknown>)?.subject as string) ?? "Hello from FlowMate",
+                    zapRunMetadata
+                );
                 console.log(`Sending out email to ${to} body is ${body}`)
-                await sendEmail(to, body);
+                await sendEmail(to, subject, body);
             }
 
-            if (currentAction.type.id === "send-sol") {
+            if (currentAction.type.id === "solana-action") {
                 const amount = parse((currentAction.metadata as Record<string, unknown>)?.amount as string, zapRunMetadata);
-                const address = parse((currentAction.metadata as Record<string, unknown>)?.address as string, zapRunMetadata);
+                const address = parse((currentAction.metadata as Record<string, unknown>)?.to as string, zapRunMetadata);
                 console.log(`Sending out SOL of ${amount} to address ${address}`);
                 await sendSol(address, amount);
             }

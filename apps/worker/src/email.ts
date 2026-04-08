@@ -14,12 +14,12 @@ const transport = nodemailer.createTransport({
     },
 });
 
-export async function sendEmail(to: string, body: string) {
+export async function sendEmail(to: string, subject: string, body: string) {
     await transport.sendMail({
         from: "pranavkokoff@gmail.com",
         sender: "pranavkokoff@gmail.com",
         to,
-        subject: "Hello from AutoFlow",
+        subject,
         text: body
     })
 }
