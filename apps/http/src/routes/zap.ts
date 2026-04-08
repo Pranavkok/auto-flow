@@ -86,7 +86,15 @@ router.get("/", authMiddleware, async (req, res) => {
 router.get("/:zapId", authMiddleware, async (req, res) => {
     //@ts-ignore
     const id = req.id;
-    const zapId = req.params.zapId;
+    const zapIdParam = req.params.zapId;
+
+    if (!zapIdParam || Array.isArray(zapIdParam)) {
+        return res.status(400).json({
+            message: "Missing zapId"
+        });
+    }
+
+    const zapId = zapIdParam;
 
     const zap = await prismaClient.zap.findFirst({
         where: {
