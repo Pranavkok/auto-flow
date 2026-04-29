@@ -15,7 +15,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FlowMate — Automate Your Workflow",
-  description: "Connect your apps and services into seamless workflows — no code needed. Build once, run forever.",
+  description: "FlowMate is a free workflow automation tool. Connect your apps, send emails, transfer Solana, and trigger webhooks — no code needed. Build automations that actually work.",
+  keywords: ["FlowMate", "workflow automation", "no-code automation", "zapier alternative", "webhook automation", "solana automation"],
+  metadataBase: new URL("https://0xpranav.space"),
+  openGraph: {
+    title: "FlowMate — Automate Your Workflow",
+    description: "FlowMate is a free workflow automation tool. Connect your apps, send emails, transfer Solana, and trigger webhooks — no code needed.",
+    url: "https://0xpranav.space",
+    siteName: "FlowMate",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FlowMate — Automate Your Workflow",
+    description: "Free workflow automation — no code needed. Build automations that actually work.",
+  },
+  alternates: {
+    canonical: "https://0xpranav.space",
+  },
 };
 
 export default function RootLayout({
