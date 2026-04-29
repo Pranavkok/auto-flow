@@ -64,7 +64,17 @@ export default function Dashboard() {
     const getWebhookUrl = (zapId: string) => `${HOOKS_URL}/hooks/catch/${userId}/${zapId}`;
 
     const copyWebhook = async (zapId: string) => {
-        await navigator.clipboard.writeText(getWebhookUrl(zapId));
+        const url = getWebhookUrl(zapId);
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch {
+            const el = document.createElement("textarea");
+            el.value = url;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand("copy");
+            document.body.removeChild(el);
+        }
         setCopiedId(zapId);
         toast.success("Webhook URL copied!");
         setTimeout(() => setCopiedId(null), 2000);
