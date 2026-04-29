@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://0xpranav.space",
   },
+  verification: {
+    google: "1KKWGi_lsT-T09S6tCS7jSynCXqcP3hh28DQseupNI8",
+  },
 };
 
 export default function RootLayout({
